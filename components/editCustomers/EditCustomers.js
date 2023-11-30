@@ -15,7 +15,7 @@ import { getAllAgent } from "@/services/agent/getAllAgent";
 import GoBackButton from "@/shared-components/GoBackButton";
 import { getAllCustomer } from "@/services/customer/getAllCustomer";
 
-const AllCustomers = () => {  
+const EditCustomers = () => {  
   const router = useRouter();
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
@@ -110,7 +110,6 @@ const AllCustomers = () => {
       <Spinner isLoading={isLoading} />
       <NavbarShared />
       <GoBackButton/>
-      <CreateEmployee handelAllCustomers={handelAllCustomers}/>
       <Table
         rows={data}
         setOffset={setOffset}
@@ -124,4 +123,4 @@ const AllCustomers = () => {
   );
 };
 
-export default AllCustomers;
+export default EditCustomers;

@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { getAllInsuranceType } from "@/services/insurance/getAllInsuranceType";
 import GoBackButton from "@/shared-components/GoBackButton";
 import CreateInsuranceType from "../createInsuranceType/CreateInsuranceType";
+import { UpdateInsuranceType } from "@/services/insurance/updateInsuranceType";
 
 const AllInsuranceType = () => {  
   const router = useRouter();
@@ -49,12 +50,12 @@ const AllInsuranceType = () => {
 
   const updateSend = async () => {
     try {
-      // const res = await UpdateState(status, id);
-      // console.log(res);
+      const res = await UpdateInsuranceType(status, id);
+      console.log(res);
       // if (res.data === "state updated sucessfully") {
-      //   handleClose();
+        handleClose();
         handelAllInsurance()
-      //   MessageSuccess("Status Updated")
+        MessageSuccess("Status Updated")
       // }
 
     } catch (error) {

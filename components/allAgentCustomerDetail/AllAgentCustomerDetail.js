@@ -15,8 +15,9 @@ import { getAllAgent } from "@/services/agent/getAllAgent";
 import GoBackButton from "@/shared-components/GoBackButton";
 import CreateAgent from "../createAgent/CreateAgent";
 import { UpdateAgent } from "@/services/agent/updateAgent";
+import { getAllAgentCustomerDetail } from "@/services/agentcustomerdetail/getAllAgentCustomerDetail";
 
-const AllAgents = () => {
+const AllAgentCustomerDetail = () => {
   const router = useRouter();
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
@@ -71,7 +72,7 @@ const AllAgents = () => {
 
       // if (response.data === "Plan Updated") {
         handleClose();
-        handelAllAgent();
+        handelAllAgentCustomerDetail();
         MessageSuccess("Agent Updated");
       // }
     } catch (error) {
@@ -82,7 +83,7 @@ const AllAgents = () => {
     }
   };
 
-  const handelAllAgent = async (e) => {
+  const handelAllAgentCustomerDetail = async (e) => {
     try {
       setIsLoading((prev) => true);
       let filters = {
@@ -90,7 +91,7 @@ const AllAgents = () => {
         page: offset,
       };
       // let response = await getAccounts(userId, filters);
-      let response = await getAllAgent(filters);
+      let response = await getAllAgentCustomerDetail(filters);
       console.log(response);
       setCount((prev) => response?.headers["x-total-count"]);
       let noOfPages = Math.ceil(response?.headers["x-total-count"] / limit);
@@ -121,7 +122,7 @@ const AllAgents = () => {
 
   useEffect(() => {
     if (isVerifiedUser) {
-      handelAllAgent();
+      handelAllAgentCustomerDetail();
     }
   }, [limit, offset, isVerifiedUser]);
 
@@ -137,8 +138,8 @@ const AllAgents = () => {
     <>
       <Spinner isLoading={isLoading} />
       <NavbarShared />
-      <GoBackButton />
-      <CreateAgent handelAllAgent={handelAllAgent} />
+      {/* <GoBackButton /> */}
+      {/* <CreateAgent handelAllAgentCustomerDetail={handelAllAgentCustomerDetail} /> */}
       <Table
         rows={data}
         setOffset={setOffset}
@@ -270,4 +271,4 @@ const AllAgents = () => {
   );
 };
 
-export default AllAgents;
+export default AllAgentCustomerDetail;

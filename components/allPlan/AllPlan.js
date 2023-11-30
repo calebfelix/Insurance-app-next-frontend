@@ -12,6 +12,7 @@ import { getAllPolicy } from "@/services/policy/getAllPolicy";
 import GoBackButton from "@/shared-components/GoBackButton";
 import { getAllPlans } from "@/services/plan/getAllPlan";
 import CreatePlan from "../createPlan/CreatePlan";
+import { UpdatePlan } from "../../services/plan/updatePlan";
 
 const AllPlan = ({ insuranceTypeId }) => {
   const router = useRouter();
@@ -27,6 +28,7 @@ const AllPlan = ({ insuranceTypeId }) => {
   const [show, setShow] = useState(false);
 
   // modal states
+  const [id, setId] = useState();
   const [policyTermMin, setPolicyTermMin] = useState();
   const [policyTermMax, setPolicyTermMax] = useState();
   const [minAge, setMinAge] = useState();
@@ -46,7 +48,8 @@ const AllPlan = ({ insuranceTypeId }) => {
 
   const handleUpdate = (d) => {
     try {
-      console.log(d.policyTermMin);
+      console.log(d);
+      setId(d.id);
       setStatus(d.status);
       setPolicyTermMin(d.policyTermMin);
       setPolicyTermMax(d.policyTermMax);
@@ -60,6 +63,36 @@ const AllPlan = ({ insuranceTypeId }) => {
     } catch (error) {
       console.log(error);
       MessageError("could not handle update");
+    }
+  };
+
+  const updateSend = async () => {
+    try {
+      let response = await UpdatePlan(
+        insuranceTypeId,
+        id,
+        policyTermMin,
+        policyTermMax,
+        maxAge,
+        minAge,
+        maxInvestmentAmount,
+        minInvestmentAmount,
+        profitRatio,
+        commissionAmount,
+        status
+      )
+      console.log(response);
+
+      if (response.data === "Plan Updated") {
+        handleClose();
+        handelAllPlans();
+        MessageSuccess("employee Updated");
+      }
+    } catch (error) {
+      console.log(error);
+      MessageError(error.response.data.message);
+    } finally {
+      setIsLoading((prev) => false);
     }
   };
 
@@ -280,7 +313,7 @@ const AllPlan = ({ insuranceTypeId }) => {
                 Close
               </button>
               <button
-                // onClick={updateSend}
+                onClick={updateSend}
                 type="button"
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >

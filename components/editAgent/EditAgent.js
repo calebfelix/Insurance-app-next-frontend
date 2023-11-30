@@ -16,7 +16,7 @@ import GoBackButton from "@/shared-components/GoBackButton";
 import CreateAgent from "../createAgent/CreateAgent";
 import { UpdateAgent } from "@/services/agent/updateAgent";
 
-const AllAgents = () => {
+const EditAgent = () => {
   const router = useRouter();
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
@@ -270,4 +270,4 @@ const AllAgents = () => {
   );
 };
 
-export default AllAgents;
+export default EditAgent;
