@@ -1,3 +1,5 @@
+'use client'
+
 // import Navbar from "react-bootstrap/Navbar";
 // import Button from "react-bootstrap/Button";
 // import Container from "react-bootstrap/Container";
@@ -189,13 +191,13 @@ const NavbarShared = () => {
           className="w-full px-4 sm:flex sm:items-center sm:justify-between"
           aria-label="Global"
         >
-          
+
           <a className="flex text-md dark:text-white" href="#">
-          <img
-            style={{ borderRadius: "50%", marginLeft: "0.5em",marginRight: "0.5em" }}
-            src={profilePic}
-            width={"30px"}
-          />
+            <img
+              style={{ borderRadius: "50%", marginLeft: "0.5em", marginRight: "0.5em" }}
+              src={profilePic}
+              width={"30px"}
+            />
             Hello! {username}
           </a>
           <a className="flex text-xl font-semibold dark:text-white" href="#">
