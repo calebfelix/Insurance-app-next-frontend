@@ -101,12 +101,12 @@ const CreateEmployee = ({ handelAllEmployees }) => {
                   type="email"
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    setEmployeeImgUrl("D:/TRAINING_NEXSALES/INSURANCE/Frontend_insurance/img/prof.jpg")
+                    setEmployeeImgUrl("/assets/img/prof.jpg")
                   }}
                   className="my-form-input"
                 ></input>
               </div>
-              <div>
+              {/* <div>
                 <label className="my-form-label">
                   role
                 </label>
@@ -120,12 +120,12 @@ const CreateEmployee = ({ handelAllEmployees }) => {
                   <option value="admin">admin</option>
                   <option value="Employee">employee</option>
                 </select>
-              </div>
+              </div> */}
               <div>
               <label className="my-form-label">
                   Image
                 </label>
-                <ImageUpload/>
+                {/* <ImageUpload/> */}
               </div>
               <button
                 type="button"
