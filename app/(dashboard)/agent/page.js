@@ -1,6 +1,8 @@
 "use client";
 import AgentProfile from "@/components/profilePage/AgentProfile";
 import EmployeeProfile from "@/components/profilePage/EmployeeProfile";
+import { MessageError } from "@/error/Errors";
+import { SendEMailAgent } from "@/services/agent/sendMail";
 import NavbarShared from "@/shared-components/Navbar";
 import Spinner from "@/shared-components/Spinner/Spinner";
 import { useRouter } from "next/navigation";
@@ -13,6 +15,16 @@ const adminpage = () => {
   useEffect(() => {
     setLocalStorageId(localStorage.getItem("id"));
   }, []);
+
+  const handlesendEmail = async()=>{
+    try {
+      let response = await SendEMailAgent()
+      console.log(response)
+      
+    } catch (error) {
+      MessageError("could not send mail")
+    }
+  }
 
   return (
     <>
@@ -94,9 +106,9 @@ const adminpage = () => {
           <button
             className="text-white m-3 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             type="button"
-            onClick={console.log("Payment Detail")}
+            onClick={handlesendEmail}
           >
-            Payment Detail
+            send Email
           </button>
         </div>
       </div>

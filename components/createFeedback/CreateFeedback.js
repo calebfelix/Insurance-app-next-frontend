@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from "react";
 import Spinner from "../../shared-components/Spinner/Spinner.js";
 import { MessageError, MessageSuccess } from "../../error/Errors.js";
