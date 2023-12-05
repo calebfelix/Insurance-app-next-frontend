@@ -17,6 +17,8 @@ const AllInsuranceType = () => {
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
   const [data, setData] = useState([]);
+  const [downloadData, setDownloadData] = useState([]);
+
   const [limit, setLimit] = useState(5);
   const [noOfPages, setNoOfPages] = useState(1);
   const [offset, setOffset] = useState(1);
@@ -72,11 +74,13 @@ const AllInsuranceType = () => {
       };
       // let response = await getAccounts(userId, filters);
       let response = await getAllInsuranceType(filters)
+      let response1 = await getAllInsuranceType(filters)
       console.log(response)
       setCount((prev) => response?.headers["x-total-count"]);
       let noOfPages = Math.ceil(response?.headers["x-total-count"] / limit);
       setNoOfPages(noOfPages);
       setData((prev) => response.data);
+      setDownloadData((prev) => response1.data);
       return;
     } catch (error) {
       console.log(error)
@@ -126,6 +130,7 @@ const AllInsuranceType = () => {
       <CreateInsuranceType handelAllInsurance={handelAllInsurance}/>
       <Table
         rows={data}
+        downloadRows={downloadData}
         setOffset={setOffset}
         setLimit={setLimit}
         isPlanButton={true}
@@ -180,12 +185,11 @@ const AllInsuranceType = () => {
                   <label className="my-form-label">status</label>
                   <select
                     className="my-form-input"
-                    defaultValue={""}
+                    value={status}
                     onChange={(e) => {
                       setStatus(prev=>e.target.value);
                     }}
                   >
-                    <option value="">change status</option>
                     <option value="true">True</option>
                     <option value="false">False</option>
                   </select>

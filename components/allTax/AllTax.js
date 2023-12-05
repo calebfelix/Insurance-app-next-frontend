@@ -20,6 +20,7 @@ const AllTax = () => {
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
   const [data, setData] = useState([]);
+  const [downloadData, setDownloadData] = useState([]);
   const [limit, setLimit] = useState(5);
   const [noOfPages, setNoOfPages] = useState(1);
   const [offset, setOffset] = useState(1);
@@ -73,11 +74,13 @@ const AllTax = () => {
       };
       // let response = await getAccounts(userId, filters);
       let response = await getAllTax(filters);
+      let response1 = await getAllTax({});
       console.log(response);
       setCount((prev) => response?.headers["x-total-count"]);
       let noOfPages = Math.ceil(response?.headers["x-total-count"] / limit);
       setNoOfPages(noOfPages);
       setData((prev) => response.data);
+      setDownloadData((prev) => response1.data);
       return;
     } catch (error) {
       console.log(error);
@@ -122,6 +125,7 @@ const AllTax = () => {
       <GoBackButton/>
       <Table
         rows={data}
+        downloadRows={downloadData}
         setOffset={setOffset}
         setLimit={setLimit}
         isUpdateButton={true}

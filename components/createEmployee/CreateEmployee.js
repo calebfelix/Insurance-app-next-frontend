@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Spinner from "../../shared-components/Spinner/Spinner.js";
 import { MessageError, MessageSuccess } from "../../error/Errors.js";
 import { CreateNewEmployee } from "@/services/employee/createEmployee.js";
-import ImageUpload from "../imageUpload/ImageUpload.js";
 
 const CreateEmployee = ({ handelAllEmployees }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +18,9 @@ const CreateEmployee = ({ handelAllEmployees }) => {
     try {
       setIsLoading((prev) => true);
       // validation
-      if (role == "") {
-        throw new Error("invalid role");
-      }
+      // if (role == "") {
+      //   throw new Error("invalid role");
+      // }
       if (employeeName == "") {
         throw new Error("invalid employeeName");
       }
@@ -123,9 +122,8 @@ const CreateEmployee = ({ handelAllEmployees }) => {
               </div> */}
               <div>
               <label className="my-form-label">
-                  Image
+                  {/* Image */}
                 </label>
-                {/* <ImageUpload/> */}
               </div>
               <button
                 type="button"

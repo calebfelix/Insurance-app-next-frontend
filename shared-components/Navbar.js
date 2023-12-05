@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 const NavbarShared = () => {
   const router = useRouter();
   const [show, setShow] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [username, setUsername] = useState("");
   const [profilePic, setProfilePic] = useState("");
@@ -23,7 +23,7 @@ const NavbarShared = () => {
   }, []);
 
   const handleClose = () => {
-    setCurrentPassword((prev) => "");
+    setOldPassword((prev) => "");
     setNewPassword((prev) => "");
     setShow((prev) => false);
   };
@@ -33,14 +33,14 @@ const NavbarShared = () => {
 
   const resetPasswordSender = async (e) => {
     try {
-      if (currentPassword.length == 0) {
+      if (oldPassword.length == 0) {
         throw new Error("invalid current Password");
       }
       if (newPassword.length == 0) {
         throw new Error("invalid new Password");
       }
 
-      let sendObj = { currentPassword, newPassword, username: username };
+      let sendObj = { oldPassword, newPassword, username: username };
       console.log(sendObj);
       let response = await resetPassword(sendObj);
       if (response.data === "updated password") {
@@ -145,9 +145,9 @@ const NavbarShared = () => {
                   <input
                     type="text"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                    value={currentPassword}
+                    value={oldPassword}
                     onChange={(e) => {
-                      setCurrentPassword(e.target.value);
+                      setOldPassword(e.target.value);
                     }}
                   ></input>
                 </div>

@@ -12,7 +12,6 @@ import { getAllPolicy } from "@/services/policy/getAllPolicy";
 import GoBackButton from "@/shared-components/GoBackButton";
 import CreatePolicy from "../createPolicy/CreatePolicy";
 import { UpdatePolicy } from "@/services/policy/updatePolicy";
-import { Hanalei } from "next/font/google";
 
 
 const AllPolicies = () => {
@@ -25,6 +24,8 @@ const AllPolicies = () => {
     const [offset, setOffset] = useState(1);
     const [isVerifiedUser, setIsVerifiedUser] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+  const [downloadData, setDownloadData] = useState([]);
+
     // modals
     const [show, setShow] = useState(false);
     const [showDeposite, setShowDeposite] = useState(false);
@@ -76,14 +77,17 @@ const AllPolicies = () => {
             let filters = {
                 limit: limit,
                 page: offset,
+                customer_id:localStorage.getItem("id")
             };
             // let response = await getAccounts(userId, filters);
             let response = await getAllPolicy(filters)
+            let response1 = await getAllPolicy({})
             console.log(response)
             setCount((prev) => response?.headers["x-total-count"]);
             let noOfPages = Math.ceil(response?.headers["x-total-count"] / limit);
             setNoOfPages(noOfPages);
             setData((prev) => response.data);
+            setDownloadData((prev) => response1.data);
             return;
         } catch (error) {
             console.log(error)
@@ -158,9 +162,10 @@ const AllPolicies = () => {
             <NavbarShared />
             <GoBackButton />
             {/* <CreateEmployee handelAllPolicies={handelAllPolicies} /> */}
-            <CreatePolicy />
+            {/* <CreatePolicy /> */}
             <Table
                 rows={data}
+                downloadRows={downloadData}
                 setOffset={setOffset}
                 setLimit={setLimit}
                 limit={limit}

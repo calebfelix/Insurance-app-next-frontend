@@ -80,7 +80,7 @@ const AllPlan = ({ insuranceTypeId }) => {
         profitRatio,
         commissionAmount,
         status
-      )
+      );
       console.log(response);
 
       if (response.data === "Plan Updated") {
@@ -146,13 +146,19 @@ const AllPlan = ({ insuranceTypeId }) => {
       </h1>
     );
   }
+  const ToCreate = () => {
+    if (data.length == 0) {
+      return <CreatePlan handelAllPlans={handelAllPlans} />;
+    }
+  };
 
   return (
     <>
       <Spinner isLoading={isLoading} />
       <NavbarShared />
       <GoBackButton />
-      <CreatePlan handelAllPlans={handelAllPlans} />
+      <ToCreate />
+      {/* <CreatePlan handelAllPlans={handelAllPlans} /> */}
       <Table
         rows={data}
         setOffset={setOffset}
@@ -291,7 +297,7 @@ const AllPlan = ({ insuranceTypeId }) => {
                   <label className="my-form-label">status</label>
                   <select
                     className="my-form-input"
-                    defaultValue={status}
+                    value={status}
                     onChange={(e) => {
                       setStatus((prev) => e.target.value);
                     }}

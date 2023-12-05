@@ -15,8 +15,9 @@ import { getAllAgent } from "@/services/agent/getAllAgent";
 import GoBackButton from "@/shared-components/GoBackButton";
 import { getAllCustomer } from "@/services/customer/getAllCustomer";
 import CreateCustomer from "../createCustomer/CreateCustomer";
+import SearchCustomerFilter from "../searchCustomerFilter/SearchCustomerFilter";
 
-const AllCustomers = () => {  
+const AllCustomers = () => {
   const router = useRouter();
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
@@ -26,6 +27,7 @@ const AllCustomers = () => {
   const [offset, setOffset] = useState(1);
   const [isVerifiedUser, setIsVerifiedUser] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [downloadData, setDownloadData] = useState([]);
   // modals
   const [show, setShow] = useState(false);
   const [showDeposite, setShowDeposite] = useState(false);
@@ -42,10 +44,12 @@ const AllCustomers = () => {
   const [book, setBook] = useState({});
 
   // userId set
-  const [userId, setUserId] = useState("") 
+  const [userId, setUserId] = useState("");
 
   // search filters
-  const [searchBankName, setSearchBankName] = useState("");
+  const [searchCustomerName, setSearchCustomerName] = useState("");
+  const [searchUsername, setSearchUsername] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
 
   const handleClose = () => {
     setShow((prev) => false);
@@ -54,24 +58,31 @@ const AllCustomers = () => {
     setShow((prev) => true);
   };
 
-
   const handelAllCustomers = async (e) => {
     try {
       setIsLoading((prev) => true);
       let filters = {
         limit: limit,
         page: offset,
+        customerName: searchCustomerName,
+        username: searchUsername,
+        email: searchEmail,
+        agentId: localStorage.getItem("id"),
       };
       // let response = await getAccounts(userId, filters);
-      let response = await getAllCustomer(filters)
-      console.log(response)
+      let response = await getAllCustomer(filters);
+      let response1 = await getAllCustomer({
+        agentId: localStorage.getItem("id"),
+      });
+      console.log(response);
       setCount((prev) => response?.headers["x-total-count"]);
       let noOfPages = Math.ceil(response?.headers["x-total-count"] / limit);
       setNoOfPages(noOfPages);
       setData((prev) => response.data);
+      setDownloadData((prev) => response1.data);
       return;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       MessageError(error.response.data.message);
     } finally {
       setIsLoading((prev) => false);
@@ -110,9 +121,20 @@ const AllCustomers = () => {
     <>
       <Spinner isLoading={isLoading} />
       <NavbarShared />
-      <GoBackButton/>
-      <CreateCustomer handelAllCustomers={handelAllCustomers}/>
+      <GoBackButton />
+      <CreateCustomer handelAllCustomers={handelAllCustomers} />
+      <SearchCustomerFilter
+        handelAllCustomers={handelAllCustomers}
+        setOffset={setOffset}
+        setSearchCustomerName={setSearchCustomerName}
+        setSearchUsername={setSearchUsername}
+        setSearchEmail={setSearchEmail}
+        searchCustomerName={searchCustomerName}
+        searchUsername={searchUsername}
+        searchEmail={searchEmail}
+      />
       <Table
+        downloadRows={downloadData}
         rows={data}
         setOffset={setOffset}
         setLimit={setLimit}
@@ -120,7 +142,6 @@ const AllCustomers = () => {
         offset={offset}
         count={count}
       />
-
     </>
   );
 };

@@ -1,79 +1,57 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
 import Spinner from "../../shared-components/Spinner/Spinner.js";
 import { MessageError, MessageSuccess } from "../../error/Errors.js";
-import { useParams } from "next/navigation.js";
+import { useParams, useRouter } from "next/navigation.js";
 import { Create } from "@/services/policy/createPolicy.js";
 
-const CreatePolicy = ({ handelAllPolicy }) => {
-  // const { insuranceTypeId } = useParams();
+const CreatePolicy = ({ insuranceTypeId, planId, handelAllPolicy, setShow }) => {
+  // const { planId } = useParams();
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false);
-  const [insuranceType, setInsuranceType] = useState('')
-  const [planName, setPlanName] = useState('')
-  const [dateCreated, setDateCreated] = useState('')
-  const [maturityDate, setMaturatyDate] = useState('')
-  const [primimumType, setPrimimumType] = useState('')
-  const [totalPremimumAmount, setTotalPremimumAmount] = useState('')
-  const [profitRatio, setProfitRatio] = useState('')
-  const [sumAssured, setSumAssured] = useState('')
-  const [requestStatus, setRequestStatus] = useState('')
-  const [customerId, setCustomerId] = useState('')
-  const [agentId, setAgentId] = useState('')
-  const [planId, setPlanId] = useState('')
-  const [aadharMetadata, setAadharMetaData] = useState('')
-  const [panMetadata, setPanMetaData] = useState('')
+  // const [insuranceType, setInsuranceType] = useState("");
+  // const [planId, setPlanId] = useState("");
+  const [amount, setAmount] = useState("");
+  const [years, setYears] = useState("");
+  const [typeofpremimum, setTypeofpremimum] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   const handleCreatePolicy = async (d) => {
     try {
       setIsLoading((prev) => true);
       // validation
-      if (insuranceType == "") {
-        throw new Error("invalid insurance type");
-      }
-      if (planName == "") {
-        throw new Error("invalid plan name");
-      }
-      if (dateCreated == "") {
-        throw new Error("invalid dateCreated");
-      }
-      if (maturityDate == "") {
-        throw new Error("invalid maturity date");
-      }
-      if (primimumType == "") {
-        throw new Error("invalid primimumType");
-      }
-      if (sumAssured < 0) {
-        throw new Error("invalid sumAssured");
-      }
-      if (profitRatio < 0) {
-        throw new Error("invalid profit ratio");
-      }
-      if (requestStatus == "") {
-        throw new Error("invalid requestStatus");
-      }
-      if (totalPremimumAmount == "") {
-        throw new Error("invalid total premimum amount");
-      }
-      if (customerId == "") {
-        throw new Error("invalid customerId");
-      }
-      if (agentId == "") {
-        throw new Error("invalid agentId");
-      }
-      if (planId == "") {
-        throw new Error("invalid planId");
-      }
-      // if (aadharMetadata == "") {
-      //   throw new Error("invalid customerId");
+      // if (insuranceType == "") {
+      //   throw new Error("invalid insurance type");
       // }
+      if (amount == "") {
+        throw new Error("invalid amount");
+      }
+      if (years == "") {
+        throw new Error("invalid years");
+      }
+      if (typeofpremimum == "") {
+        throw new Error("invalid typeofpremimum");
+      }
+      if (paymentMethod == "") {
+        throw new Error("invalid paymentMethod");
+      }
+      console.log(planId)
       const response = await Create(
-        insuranceType, planName, dateCreated, maturityDate, primimumType, totalPremimumAmount, profitRatio, sumAssured, requestStatus, customerId, agentId, planId
-      );
+        amount,
+        years,
+        typeofpremimum,
+        paymentMethod,
+        insuranceTypeId,
+        planId
+        );
       console.log(response);
-      handelAllPolicy();
+      // handelAllPolicy();
+      setShow((prev) => !prev);
       MessageSuccess("Created Added");
+      router.push(`/customer`)
       return;
     } catch (error) {
+      console.log(error)
       if (error.response) {
         MessageError(error.response.data.message);
       } else {
@@ -92,133 +70,74 @@ const CreatePolicy = ({ handelAllPolicy }) => {
           <div className="my-form-container">
             <form className="my-main-form" action="#">
               <h5 className="text-xl font-medium text-gray-900 dark:text-white">
-                Create Policy
+                Buy Policy
               </h5>
               <div>
-                <label className="my-form-label">Insurance Type </label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setInsuranceType(e.target.value);
-                  }}
-                  className="my-form-input"
-                ></input>
-              </div>
-              <div>
-                <label className="my-form-label">Plan Name</label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setPlanName(e.target.value);
-                  }}
-                  className="my-form-input"
-                ></input>
-              </div>
-              <div>
-                <label className="my-form-label">Date Created</label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setDateCreated(e.target.value);
-                  }}
-                  className="my-form-input"
-                ></input>
-              </div>
-              <div>
-                <label className="my-form-label">maturity Date</label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setMaturatyDate(e.target.value);
-                  }}
-                  className="my-form-input"
-                ></input>
-              </div>
-              <div>
-                <label className="my-form-label">
-                  Minimim Investment Amount
-                </label>
+                <label className="my-form-label">Amount</label>
                 <input
                   type="number"
                   onChange={(e) => {
-                    setMinInvestmentAmout(e.target.value);
+                    setAmount(Number(e.target.value));
                   }}
                   className="my-form-input"
                 ></input>
               </div>
               <div>
-                <label className="my-form-label">
-                  Maximum Investment Amount
-                </label>
+                <label className="my-form-label">No of Years</label>
                 <input
                   type="number"
                   onChange={(e) => {
-                    setMaxInvestmentAmount(e.target.value);
+                    setYears(Number(e.target.value));
                   }}
                   className="my-form-input"
                 ></input>
               </div>
               <div>
-                <label className="my-form-label">Premimum Type</label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setPrimimumType(e.target.value);
-                  }}
-                  className="my-form-input"
-                ></input>
-              </div>
-              <div>
-                <label className="my-form-label">Total Premimum Amount</label>
-                <input
-                  type="number"
-                  onChange={(e) => {
-                    setTotalPremimumAmount(e.target.value);
-                  }}
-                  className="my-form-input"
-                ></input>
-              </div>
-              <div>
-                <label className="my-form-label">profit Ratio</label>
-                <input
-                  type="number"
-                  onChange={(e) => {
-                    setProfitRatio(e.target.value);
-                  }}
-                  className="my-form-input"
-                ></input>
-              </div>
-              <div>
-                <label className="my-form-label">Request Status</label>
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setRequestStatus(e.target.value);
-                  }}
-                  className="my-form-input"
-                ></input>
-              </div>
-              {/* <div>
-                <label className="my-form-label">
-                  role
-                </label>
+                <label className="my-form-label">Type of Premimum</label>
                 <select
                   className="my-form-input"
                   onChange={(e) => {
-                    setRole(e.target.value);
+                    setTypeofpremimum(e.target.value);
                   }}
                 >
                   <option value="">select</option>
-                  <option value="admin">admin</option>
-                  <option value="Employee">employee</option>
+                  <option value="monthly">monthly</option>
+                  <option value="half-yearly">half-yearly</option>
+                  <option value="quaterly">quaterly</option>
+                  <option value="yearly">yearly</option>
                 </select>
-              </div> */}
+              </div>
+              <div>
+                <label className="my-form-label">Payment Method</label>
+                <select
+                  className="my-form-input"
+                  onChange={(e) => {
+                    setPaymentMethod(e.target.value);
+                  }}
+                >
+                  <option value="">select</option>
+                  <option value="UPI">UPI</option>
+                  <option value="Credit-Card">Credit Card</option>
+                  <option value="debit-Card">debit Card</option>
+                  <option value="Net-Banking">Net-Banking</option>
+                </select>
+              </div>
+
               <button
                 type="button"
                 className="my-form-submit-btn"
                 onClick={handleCreatePolicy}
               >
-                Add Policy
+                Buy Policy
+              </button>
+              <button
+                onClick={(e) => {
+                  setShow((prev) => !prev);
+                }}
+                type="button"
+                className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+              >
+                Close
               </button>
             </form>
           </div>

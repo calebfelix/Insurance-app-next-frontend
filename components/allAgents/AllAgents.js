@@ -15,12 +15,14 @@ import { getAllAgent } from "@/services/agent/getAllAgent";
 import GoBackButton from "@/shared-components/GoBackButton";
 import CreateAgent from "../createAgent/CreateAgent";
 import { UpdateAgent } from "@/services/agent/updateAgent";
+import SearchAgentFilter from "../searchAgentFilter/SearchAgentFilter";
 
 const AllAgents = () => {
   const router = useRouter();
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
   const [data, setData] = useState([]);
+  const [downloadData, setDownloadData] = useState([]);
   const [limit, setLimit] = useState(5);
   const [noOfPages, setNoOfPages] = useState(1);
   const [offset, setOffset] = useState(1);
@@ -35,13 +37,15 @@ const AllAgents = () => {
   const [email, setEmail] = useState("");
   const [agentAddress, setAgentAddress] = useState("");
   const [qualification, setQualification] = useState("");
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState();
 
   // userId set
   const [userId, setUserId] = useState("");
 
   // search filters
-  const [searchBankName, setSearchBankName] = useState("");
+  const [searchAgentName, setSearchAgentName] = useState("");
+  const [searchUsername, setSearchUsername] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
 
   const handleClose = () => {
     setShow((prev) => false);
@@ -56,6 +60,7 @@ const AllAgents = () => {
       setId(d.id);
       setAgentName(d.agentName);
       setEmail(d.email);
+      setStatus(d.status);
       setQualification(d.qualification);
       setAgentAddress(d.agentAddress);
       setShow((prev) => true);
@@ -66,13 +71,20 @@ const AllAgents = () => {
 
   const updateSend = async () => {
     try {
-      let response = await UpdateAgent(agentName, email, qualification, status, agentAddress, id);
+      let response = await UpdateAgent(
+        agentName,
+        email,
+        qualification,
+        status,
+        agentAddress,
+        id
+      );
       console.log(response);
 
       // if (response.data === "Plan Updated") {
-        handleClose();
-        handelAllAgent();
-        MessageSuccess("Agent Updated");
+      handleClose();
+      handelAllAgent();
+      MessageSuccess("Agent Updated");
       // }
     } catch (error) {
       console.log(error);
@@ -88,14 +100,19 @@ const AllAgents = () => {
       let filters = {
         limit: limit,
         page: offset,
+        agentName: searchAgentName,
+        username:searchUsername,
+        email:searchEmail
       };
       // let response = await getAccounts(userId, filters);
       let response = await getAllAgent(filters);
+      let response1 = await getAllAgent({});
       console.log(response);
       setCount((prev) => response?.headers["x-total-count"]);
       let noOfPages = Math.ceil(response?.headers["x-total-count"] / limit);
       setNoOfPages(noOfPages);
       setData((prev) => response.data);
+      setDownloadData((prev) => response1.data);
       return;
     } catch (error) {
       console.log(error);
@@ -139,8 +156,19 @@ const AllAgents = () => {
       <NavbarShared />
       <GoBackButton />
       <CreateAgent handelAllAgent={handelAllAgent} />
+      <SearchAgentFilter
+        handelAllAgent={handelAllAgent}
+        setOffset={setOffset}
+        setSearchAgentName={setSearchAgentName}
+        setSearchUsername={setSearchUsername}
+        setSearchEmail={setSearchEmail}
+        searchAgentName={searchAgentName}
+        searchUsername={searchUsername}
+        searchEmail={searchEmail}
+      />
       <Table
         rows={data}
+        downloadRows={downloadData}
         setOffset={setOffset}
         setLimit={setLimit}
         isUpdateButton={true}
@@ -234,7 +262,7 @@ const AllAgents = () => {
                   <label className="my-form-label">status</label>
                   <select
                     className="my-form-input"
-                    defaultValue={status}
+                    value={status}
                     onChange={(e) => {
                       setStatus((prev) => e.target.value);
                     }}

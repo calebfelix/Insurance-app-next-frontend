@@ -8,13 +8,14 @@ export const CreateFeedbackCustomer = async (
   customerId
 ) => {
   const res = await axios.post(
-    `http://127.0.0.1:20200/api/v1/feedbacl/${customerId}`,
+    `http://127.0.0.1:20200/api/v1/feedback`,
     {
       customerName,
       title,
       message,
       contactDate,
-      policyId
+      policyId,
+      customerId
     },
     {
       headers: { auth: localStorage.getItem("auth") },

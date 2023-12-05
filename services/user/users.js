@@ -61,7 +61,7 @@ export const deleteUser = async (userId) => {
 };
 
 export const resetPassword = async (body) => {
-  const response = await axios.put(
+  const response = await axios.post(
     `http://127.0.0.1:20200/api/v1/resetpassword`,
     body,
     { headers: { auth: localStorage.getItem("auth") } }

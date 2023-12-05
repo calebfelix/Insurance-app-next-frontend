@@ -12,6 +12,7 @@ import CreateEmployee from "../createEmployee/CreateEmployee";
 import { Input } from "postcss";
 import { UpdateEmployee } from "@/services/employee/upateEmployee";
 import GoBackButton from "@/shared-components/GoBackButton";
+import SearchEmployeeFilter from "../searchEmployeeFilter/SearchEmployeeFilter";
 // import Image from "next/image";
 
 const AllEmployees = () => {
@@ -19,6 +20,7 @@ const AllEmployees = () => {
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
   const [data, setData] = useState([]);
+  const [downloadData, setDownloadData] = useState([]);
   const [limit, setLimit] = useState(5);
   const [noOfPages, setNoOfPages] = useState(1);
   const [offset, setOffset] = useState(1);
@@ -36,6 +38,11 @@ const AllEmployees = () => {
   const [email, setEmail] = useState("");
   const [employeeImgUrl, setEmployeeImgUrl] = useState("");
   const [status, setStatus] = useState();
+
+  // search filters
+  const [searchEmployeeName, setSearchEmployeeName] = useState("");
+  const [searchUsername, setSearchUsername] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
 
   const handleClose = () => {
     setShow((prev) => false);
@@ -62,14 +69,21 @@ const AllEmployees = () => {
 
   const updateSend = async () => {
     try {
-      const res = await UpdateEmployee(role, employeeName, password, email, status, employeeImgUrl, id)
+      const res = await UpdateEmployee(
+        role,
+        employeeName,
+        password,
+        email,
+        status,
+        employeeImgUrl,
+        id
+      );
       console.log(res);
       if (res.data === "employee updated sucessfully") {
         handleClose();
-        handelAllEmployees()
-        MessageSuccess("employee Updated")
+        handelAllEmployees();
+        MessageSuccess("employee Updated");
       }
-
     } catch (error) {
       MessageError(error.message);
     }
@@ -81,14 +95,19 @@ const AllEmployees = () => {
       let filters = {
         limit: limit,
         page: offset,
+        employeeName: searchEmployeeName,
+        username: searchUsername,
+        email: searchEmail,
       };
       // let response = await getAccounts(userId, filters);
       let response = await getAllEmployee(filters);
+      let response1 = await getAllEmployee({});
       console.log(response);
       setCount((prev) => response?.headers["x-total-count"]);
       let noOfPages = Math.ceil(response?.headers["x-total-count"] / limit);
       setNoOfPages(noOfPages);
       setData((prev) => response.data);
+      setDownloadData((prev) => response1.data);
       return;
     } catch (error) {
       console.log(error);
@@ -130,10 +149,21 @@ const AllEmployees = () => {
     <>
       <Spinner isLoading={isLoading} />
       <NavbarShared />
-      <GoBackButton/>
+      <GoBackButton />
       <CreateEmployee handelAllEmployees={handelAllEmployees} />
+      <SearchEmployeeFilter
+        handelAllEmployees={handelAllEmployees}
+        setOffset={setOffset}
+        setSearchEmployeeName={setSearchEmployeeName}
+        setSearchUsername={setSearchUsername}
+        setSearchEmail={setSearchEmail}
+        searchEmployeeName={searchEmployeeName}
+        searchUsername={searchUsername}
+        searchEmail={searchEmail}
+      />
       <Table
         rows={data}
+        downloadRows={downloadData}
         setOffset={setOffset}
         setLimit={setLimit}
         isUpdateButton={true}
@@ -207,7 +237,7 @@ const AllEmployees = () => {
                   <label className="my-form-label">status</label>
                   <select
                     className="my-form-input"
-                    defaultValue={status}
+                    value={status}
                     onChange={(e) => {
                       setStatus((prev) => e.target.value);
                     }}

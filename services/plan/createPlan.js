@@ -10,6 +10,7 @@ export const CreateNewPlan = async (
   profitRatio,
   commissionAmount
 ) => {
+  console.log("beforeeeee");
   const res = await axios.post(
     `http://127.0.0.1:20200/api/v1/plan/${insuranceTypeId}`,
     {
@@ -26,4 +27,5 @@ export const CreateNewPlan = async (
       headers: { auth: localStorage.getItem("auth") },
     }
   );
+  return res;
 };

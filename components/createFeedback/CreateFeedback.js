@@ -1,21 +1,22 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import Spinner from "../../shared-components/Spinner/Spinner.js";
 import { MessageError, MessageSuccess } from "../../error/Errors.js";
 import { useParams } from "next/navigation.js";
 import { CreateFeedbackCustomer } from "@/services/feedback/createFeedback.js";
+import AllPolicyDropDown from "../allPolicyDropDown/AllPolicyDropDown.js";
 
-const CreateFeedback = ({ handelAllAgent }) => {
+const CreateFeedback = () => {
   const { insuranceTypeId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [id, setId] = useState()
-  const [customerName, setCustomerName] = useState("")
-  const [title, setTitle] = useState("")
-  const [reply, useReply] = useState("")
-  const [message, setMessage] = useState("")
-  const [contactDate, setContactDate] = useState("")
-  const [policyId, setPolicyId] = useState()
-  const [customerId, setCustomerId] = useState()
+  const [id, setId] = useState();
+  const [customerName, setCustomerName] = useState("");
+  const [title, setTitle] = useState("");
+  const [reply, useReply] = useState("");
+  const [message, setMessage] = useState("");
+  const [contactDate, setContactDate] = useState("");
+  const [policyId, setPolicyId] = useState();
+  const [customerId, setCustomerId] = useState();
   useEffect(() => {
     setCustomerId(localStorage.getItem("id"));
   }, []);
@@ -33,9 +34,9 @@ const CreateFeedback = ({ handelAllAgent }) => {
       if (message == "") {
         throw new Error("Please Type Some Message");
       }
-      if (contactDate == "") {
-        throw new Error("invalid date");
-      }
+      // if (contactDate == "") {
+      //   throw new Error("invalid date");
+      // }
       if (policyId == "") {
         throw new Error("invalid policy Id");
       }
@@ -44,15 +45,15 @@ const CreateFeedback = ({ handelAllAgent }) => {
         customerName,
         title,
         message,
-        contactDate,
+        new Date(),
         policyId,
-        d.id
+        localStorage.getItem("id")
       );
-      console.log(response.data);
-      handelAllAgent();
+      console.log(response);
       MessageSuccess("Feedback sent");
       return;
     } catch (error) {
+      console.log(error)
       if (error.response) {
         MessageError(error.response.data.message);
       } else {
@@ -99,11 +100,12 @@ const CreateFeedback = ({ handelAllAgent }) => {
                   type="text"
                   onChange={(e) => {
                     setMessage(e.target.value);
+                    // setContactDate(new Date())
                   }}
                   className="my-form-input"
                 ></input>
               </div>
-              <div>
+              {/* <div>
                 <label className="my-form-label">Contact Date</label>
                 <input
                   type="text"
@@ -112,16 +114,17 @@ const CreateFeedback = ({ handelAllAgent }) => {
                   }}
                   className="my-form-input"
                 ></input>
-              </div>
+              </div> */}
               <div>
-                <label className="my-form-label">Policy Id</label>
-                <input
+                <label className="my-form-label">Policy</label>
+                {/* <input
                   type="text-area"
                   onChange={(e) => {
                     setPolicyId(e.target.value);
                   }}
                   className="my-form-input"
-                ></input>
+                ></input> */}
+                <AllPolicyDropDown setPolicyId={setPolicyId} />
               </div>
               <button
                 type="button"

@@ -11,12 +11,14 @@ import { getAllState } from "@/services/state/getAllState";
 import CreateState from "../createState/CreateState";
 import { UpdateState } from "@/services/state/updateState";
 import GoBackButton from "@/shared-components/GoBackButton";
+import SearchStateFilter from "../searchStateFilter/SearchStateFilter";
 
 const AllStates = () => {
   const router = useRouter();
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
   const [data, setData] = useState([]);
+  const [downloadData, setDownloadData] = useState([]);
   const [limit, setLimit] = useState(5);
   const [noOfPages, setNoOfPages] = useState(1);
   const [offset, setOffset] = useState(1);
@@ -28,6 +30,9 @@ const AllStates = () => {
   // modal states
   const [status, setStatus] = useState(true);
   const [id, setId] = useState("");
+
+    // search filters
+    const [searchStateName, setSearchStateName] = useState("");
 
   const handleClose = () => {
     setShow((prev) => false);
@@ -53,10 +58,9 @@ const AllStates = () => {
       console.log(res);
       if (res.data === "state updated sucessfully") {
         handleClose();
-        handelAllState()
-        MessageSuccess("Status Updated")
+        handelAllState();
+        MessageSuccess("Status Updated");
       }
-
     } catch (error) {
       MessageError(error.message);
     }
@@ -68,14 +72,17 @@ const AllStates = () => {
       let filters = {
         limit: limit,
         page: offset,
+        stateName: searchStateName
       };
       // let response = await getAccounts(userId, filters);
       let response = await getAllState(filters);
+      let response1 = await getAllState({});
       console.log(response);
       setCount((prev) => response?.headers["x-total-count"]);
       let noOfPages = Math.ceil(response?.headers["x-total-count"] / limit);
       setNoOfPages(noOfPages);
       setData((prev) => response.data);
+      setDownloadData((prev) => response1.data);
       return;
     } catch (error) {
       console.log(error);
@@ -117,10 +124,17 @@ const AllStates = () => {
     <>
       <Spinner isLoading={isLoading} />
       <NavbarShared />
-      <GoBackButton/>
-      <CreateState handelAllState={handelAllState} />
+      <GoBackButton />
+      {/* <CreateState handelAllState={handelAllState} /> */}
+      <SearchStateFilter
+        handelAllState={handelAllState}
+        setOffset={setOffset}
+        setSearchStateName={setSearchStateName}
+        searchStateName={searchStateName}
+      />
       <Table
         rows={data}
+        downloadRows={downloadData}
         setOffset={setOffset}
         setLimit={setLimit}
         limit={limit}
@@ -174,12 +188,11 @@ const AllStates = () => {
                   <label className="my-form-label">status</label>
                   <select
                     className="my-form-input"
-                    defaultValue={""}
+                    value={status}
                     onChange={(e) => {
-                      setStatus(prev=>e.target.value);
+                      setStatus((prev) => e.target.value);
                     }}
                   >
-                    <option value="">change status</option>
                     <option value="true">True</option>
                     <option value="false">False</option>
                   </select>

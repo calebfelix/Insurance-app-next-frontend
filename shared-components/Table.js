@@ -3,14 +3,20 @@ import PaginationShared from "./PaginationShared";
 import RowButtons from "./RowButtons";
 import Spinner from "./Spinner/Spinner";
 import { Pagination } from "@mui/material";
+import DownloadButton from "./downloadButton/DownloadButton";
 
 const Table = ({
   rows,
+  downloadRows,
   setLimit,
   setOffset,
   limit,
   offset,
   count,
+  isPurchaseButton,
+        handlePurchase,
+  isBuyPlanButton,
+  handleBuyPlan,
   handlePlan,
   handleUpdate,
   handleDelete,
@@ -31,7 +37,7 @@ const Table = ({
   let dataForTable;
 
   if (rows.length !== 0) {
-    let keysArray = Object.keys(rows[0]);
+    let keysArray = Object.keys(rows[0] || {});
     if (!hasNoButtons) {
       keysArray.push("Edit");
     }
@@ -75,10 +81,14 @@ const Table = ({
                     handleDelete={handleDelete}
                     handleView={handleView}
                     itemData={d}
+                    isPurchaseButton={isPurchaseButton}
+        handlePurchase={handlePurchase}
                     isPlanButton={isPlanButton}
                     isDeleteButton={isDeleteButton}
                     isUpdateButton={isUpdateButton}
                     isViewButton={isViewButton}
+                    isBuyPlanButton={isBuyPlanButton}
+                    handleBuyPlan= {handleBuyPlan}
                     isDeposite={isDeposite}
                     isWithdraw={isWithdraw}
                     isTransfer={isTransfer}
@@ -181,6 +191,7 @@ const Table = ({
           </thead>
           <tbody>{dataForTable}</tbody>
         </table>
+        <DownloadButton downloadData={downloadRows}/>
       </div>
     </>
   );

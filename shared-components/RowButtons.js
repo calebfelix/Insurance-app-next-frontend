@@ -6,11 +6,14 @@ const RowButtons = ({
   handleDelete,
   handleView,
   itemData,
+  isPurchaseButton,
+        handlePurchase,
   isUpdateButton,
   isPlanButton,
   isDeleteButton,
   isViewButton,
-
+  isBuyPlanButton,
+  handleBuyPlan,
   isDeposite,
   isWithdraw,
   isTransfer,
@@ -122,6 +125,36 @@ const RowButtons = ({
         }}
       >
         Transfer
+      </button>
+    );
+  }
+  if (isBuyPlanButton) {
+    Blist.push(
+      <button
+      key={6}
+        type="button"
+        className="text-white mr-5 bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        style={{ margin: "0.5rem" }}
+        onClick={() => {
+          handleBuyPlan(itemData);
+        }}
+      >
+        View/Buy Plan
+      </button>
+    );
+  }
+  if (isPurchaseButton) {
+    Blist.push(
+      <button
+      key={6}
+        type="button"
+        className="text-white mr-5 bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        style={{ margin: "0.5rem" }}
+        onClick={() => {
+          handlePurchase(itemData);
+        }}
+      >
+        Purchase
       </button>
     );
   }

@@ -3,9 +3,11 @@ import Spinner from "../../shared-components/Spinner/Spinner.js";
 import { MessageError, MessageSuccess } from "../../error/Errors.js";
 import { CreateNewPlan } from "@/services/plan/createPlan.js";
 import { useParams } from "next/navigation.js";
+import { getAllPlans } from "@/services/plan/getAllPlan.js";
 
 const CreatePlan = ({ handelAllPlans }) => {
   const { insuranceTypeId } = useParams();
+  // console.log(useParams())
   const [isLoading, setIsLoading] = useState(false);
 
   const [policyTermMin, setPolicyTermMin] = useState(-1);
@@ -20,13 +22,23 @@ const CreatePlan = ({ handelAllPlans }) => {
 
   const handleCreatePlan = async (d) => {
     try {
+
+      let params={}
+      let res = await getAllPlans(insuranceTypeId,params)
+      console.log(res.data)
       setIsLoading((prev) => true);
       // validation
+      if(res.data.length!=0){
+        throw new Error("Plan Already for this type");
+      }
       if (policyTermMin <0) {
         throw new Error("invalid policyTerm min");
       }
       if (policyTermMax <0) {
         throw new Error("invalid policyTerm max");
+      }
+      if (policyTermMin > policyTermMax) {
+        throw new Error("policyTermMin > policyTermMax");
       }
       if (minAge <0) {
         throw new Error("invalid minimum age");
@@ -34,11 +46,17 @@ const CreatePlan = ({ handelAllPlans }) => {
       if (maxAge <0) {
         throw new Error("invalid maximum age");
       }
+      if (minAge > maxAge) {
+        throw new Error("minAge > maxAge");
+      }
       if (minInvestmentAmount <0) {
         throw new Error("invalid minimum investment amount");
       }
       if (maxInvestmentAmount <0) {
         throw new Error("invalid maximum investment amount");
+      }
+      if (minInvestmentAmount > maxInvestmentAmount) {
+        throw new Error("minInvestmentAmount > maxInvestmentAmount");
       }
       if (profitRatio <0) {
         throw new Error("invalid profit ratio");
@@ -46,6 +64,8 @@ const CreatePlan = ({ handelAllPlans }) => {
       if (commissionAmount <0) {
         throw new Error("invalid commission amount");
       }
+      console.log(insuranceTypeId)
+      
       const response = await CreateNewPlan(
         insuranceTypeId,
         policyTermMin,
@@ -57,8 +77,9 @@ const CreatePlan = ({ handelAllPlans }) => {
         profitRatio,
         commissionAmount
       );
+      
       handelAllPlans();
-      MessageSuccess("Created Added");
+      MessageSuccess("Created Plan");
       return;
     } catch (error) {
       if(error.response){
@@ -77,7 +98,7 @@ const CreatePlan = ({ handelAllPlans }) => {
       <div className="mx-auto w-[25%]">
         <div className="flex justify-center mt-10">
           <div className="my-form-container">
-            <form className="my-main-form" action="#">
+            <form className="my-main-form">
               <h5 className="text-xl font-medium text-gray-900 dark:text-white">
                 Create Plan
               </h5>

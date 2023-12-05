@@ -4,6 +4,7 @@ import { MessageError, MessageSuccess } from "../../error/Errors.js";
 import { CreateNewPlan } from "@/services/plan/createPlan.js";
 import { useParams } from "next/navigation.js";
 import { CreateNewAgent } from "@/services/agent/createAgent.js";
+import { isValidEmail } from "@/utils/Validator.js";
 
 const CreateAgent = ({ handelAllAgent }) => {
   const { insuranceTypeId } = useParams();
@@ -36,6 +37,9 @@ const CreateAgent = ({ handelAllAgent }) => {
       }
       if (email == "") {
         throw new Error("invalid email");
+      }
+      if (!isValidEmail(email)){
+        throw new Error("invalid email type");
       }
       if (agentAddress == "") {
         throw new Error("invalid agentAddress");

@@ -106,7 +106,7 @@ const AllFeedBack = () => {
       <NavbarShared />
       <GoBackButton />
       {/* <CreateEmployee handelAllFeedBack={handelAllFeedBack} /> */}
-      <CreateFeedback handelAllFeedBack={handelAllFeedBack}/>
+      {/* <CreateFeedback handelAllFeedBack={handelAllFeedBack}/> */}
       <Table
         rows={data}
         setOffset={setOffset}

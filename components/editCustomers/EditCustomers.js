@@ -14,8 +14,9 @@ import { getAllState } from "@/services/state/getAllState";
 import { getAllAgent } from "@/services/agent/getAllAgent";
 import GoBackButton from "@/shared-components/GoBackButton";
 import { getAllCustomer } from "@/services/customer/getAllCustomer";
+import SearchCustomerFilter from "../searchCustomerFilter/SearchCustomerFilter";
 
-const EditCustomers = () => {  
+const EditCustomers = () => {
   const router = useRouter();
   const [netWorth, setNetWorth] = useState(0);
   const [count, setCount] = useState(1);
@@ -41,10 +42,12 @@ const EditCustomers = () => {
   const [book, setBook] = useState({});
 
   // userId set
-  const [userId, setUserId] = useState("") 
+  const [userId, setUserId] = useState("");
 
   // search filters
-  const [searchBankName, setSearchBankName] = useState("");
+  const [searchCustomerName, setSearchCustomerName] = useState("");
+  const [searchUsername, setSearchUsername] = useState("");
+  const [searchEmail, setSearchEmail] = useState("");
 
   const handleClose = () => {
     setShow((prev) => false);
@@ -53,24 +56,26 @@ const EditCustomers = () => {
     setShow((prev) => true);
   };
 
-
   const handelAllCustomers = async (e) => {
     try {
       setIsLoading((prev) => true);
       let filters = {
         limit: limit,
         page: offset,
+        customerName:searchCustomerName,
+        username:searchUsername,
+        email:searchEmail
       };
       // let response = await getAccounts(userId, filters);
-      let response = await getAllCustomer(filters)
-      console.log(response)
+      let response = await getAllCustomer(filters);
+      console.log(response);
       setCount((prev) => response?.headers["x-total-count"]);
       let noOfPages = Math.ceil(response?.headers["x-total-count"] / limit);
       setNoOfPages(noOfPages);
       setData((prev) => response.data);
       return;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       MessageError(error.response.data.message);
     } finally {
       setIsLoading((prev) => false);
@@ -109,7 +114,17 @@ const EditCustomers = () => {
     <>
       <Spinner isLoading={isLoading} />
       <NavbarShared />
-      <GoBackButton/>
+      <GoBackButton />
+      <SearchCustomerFilter
+        handelAllCustomers={handelAllCustomers}
+        setOffset={setOffset}
+        setSearchCustomerName={setSearchCustomerName}
+        setSearchUsername={setSearchUsername}
+        setSearchEmail={setSearchEmail}
+        searchCustomerName={searchCustomerName}
+        searchUsername={searchUsername}
+        searchEmail={searchEmail}
+      />
       <Table
         rows={data}
         setOffset={setOffset}
@@ -118,7 +133,6 @@ const EditCustomers = () => {
         offset={offset}
         count={count}
       />
-
     </>
   );
 };
